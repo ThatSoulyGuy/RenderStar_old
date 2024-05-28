@@ -45,18 +45,12 @@ namespace RenderStar
 				Settings::instance = instance;
 			}
 
-			static Settings& GetInstance()
-			{
 				return instance;
 			}
 
 		private:
 
 			UnorderedMap<String, Any> settings;
-
-			static Settings instance;
 		};
-
-		Settings Settings::instance;
 	}
 }

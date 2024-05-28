@@ -186,10 +186,15 @@
     <ClCompile Include="RenderStar\RenderStar.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="RenderStar\Include\RenderStar\ECS\Component.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\ECS\GameObject.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\ECS\GameObjectManager.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Math\Transform.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\RenderStar.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Core\Logger.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Core\Settings.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Core\Window.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Mesh.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Renderer.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Shader.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\ShaderManager.hpp" />

@@ -5,17 +5,19 @@
 #include <dxc/dxcapi.h>
 #include "RenderStar/Core/Logger.hpp"
 #include "RenderStar/Core/Settings.hpp"
+#include "RenderStar/ECS/Component.hpp"
 #include "RenderStar/Render/Renderer.hpp"
 #include "RenderStar/Render/Vertex.hpp"
 
 using namespace RenderStar::Core;
+using namespace RenderStar::ECS;
 using namespace RenderStar::Render;
 
 namespace RenderStar
 {
 	namespace Render
 	{
-        class Shader 
+        class Shader : public Component
         {
 
         public:
@@ -221,7 +223,7 @@ namespace RenderStar
                 return shaderBlob;
             }
 
-            void CreateGraphicsPipelineState(ComPtr<IDxcBlob>& vertexShaderBlob, ComPtr<IDxcBlob>& pixelShaderBlob, ComPtr<IDxcBlob>& geometryShaderBlob, ComPtr<IDxcBlob>& hullShaderBlob, ComPtr<IDxcBlob>& domainShaderBlob) 
+            void CreateGraphicsPipelineState(ComPtr<IDxcBlob>& vertexShaderBlob, ComPtr<IDxcBlob>& pixelShaderBlob, ComPtr<IDxcBlob>& geometryShaderBlob, ComPtr<IDxcBlob>& hullShaderBlob, ComPtr<IDxcBlob>& domainShaderBlob)
             {
                 D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineStateDescription = {};
 
@@ -240,11 +242,12 @@ namespace RenderStar
                 pipelineStateDescription.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
                 pipelineStateDescription.NumRenderTargets = 1;
                 pipelineStateDescription.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+                pipelineStateDescription.DSVFormat = DXGI_FORMAT_D32_FLOAT;
                 pipelineStateDescription.SampleDesc.Count = 1;
 
                 HRESULT result = Renderer::GetInstance()->GetDevice()->CreateGraphicsPipelineState(&pipelineStateDescription, IID_PPV_ARGS(&pipelineState));
 
-                if (FAILED(result)) 
+                if (FAILED(result))
                     Logger_ThrowError("FAILED", "Failed to create graphics pipeline state", true);
             }
 

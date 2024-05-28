@@ -2,11 +2,14 @@
 
 #include "RenderStar/Core/Logger.hpp"
 #include "RenderStar/Core/Settings.hpp"
+#include "RenderStar/ECS/GameObjectManager.hpp"
+#include "RenderStar/Render/Mesh.hpp"
 #include "RenderStar/Render/Renderer.hpp"
 #include "RenderStar/Render/ShaderManager.hpp"
 #include "RenderStar/Util/CommonVersionFormat.hpp"
 
 using namespace RenderStar::Core;
+using namespace RenderStar::ECS;
 using namespace RenderStar::Render;
 using namespace RenderStar::Util;
 
@@ -20,7 +23,7 @@ namespace RenderStar
 		static void PreInitialize()
 		{
 			Settings::GetInstance()->Set<String>("defaultApplicationName", "RenderStar*");
-			Settings::GetInstance()->Set<CommonVersionFormat>("defaultApplicationVersion", CommonVersionFormat::Create(0, 0, 7));
+			Settings::GetInstance()->Set<CommonVersionFormat>("defaultApplicationVersion", CommonVersionFormat::Create(0, 0, 9));
 			Settings::GetInstance()->Set<Vector2i>("defaultWindowDimensions", { 750, 450 });
 			Settings::GetInstance()->Set<WNDPROC>("defaultWindowProceadure", [](HWND handle, UINT message, WPARAM wParam, LPARAM  lParam) -> LRESULT
 			{
@@ -66,23 +69,36 @@ namespace RenderStar
 
 			Renderer::GetInstance()->Initialize();
 
+			Renderer::GetInstance()->AddRenderFunction([]{GameObjectManager::GetInstance()->Render(); });
+
 			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default"));
+
+			Shared<GameObject> square = Mesh::CreateGameObject("square", "default", 
+			{
+				{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+				{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+				{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+				{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }
+			}, { 2, 1, 0, 3, 2, 0 });
+
+			square->GetComponent<Mesh>()->Generate();
 		}
 
 		static void Update()
 		{
-
+			GameObjectManager::GetInstance()->Update();
 		}
 
 		static void Render()
 		{
-			Renderer::GetInstance()->PreRender();
-			Renderer::GetInstance()->PostRender();
+			Renderer::GetInstance()->Render();
 		}
 
 		static void CleanUp()
 		{
 			Logger_WriteConsole("RenderStar Engine Cleaned Up.", LogLevel::INFORMATION);
+
+			GameObjectManager::GetInstance()->CleanUp();
 
 			Renderer::GetInstance()->CleanUp();
 		}

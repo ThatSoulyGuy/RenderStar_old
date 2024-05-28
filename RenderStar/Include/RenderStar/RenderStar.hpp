@@ -3,6 +3,7 @@
 #include "RenderStar/Core/Logger.hpp"
 #include "RenderStar/Core/Settings.hpp"
 #include "RenderStar/Render/Renderer.hpp"
+#include "RenderStar/Render/ShaderManager.hpp"
 #include "RenderStar/Util/CommonVersionFormat.hpp"
 
 using namespace RenderStar::Core;
@@ -18,10 +19,10 @@ namespace RenderStar
 
 		static void PreInitialize()
 		{
-			Settings::GetInstance().Set<String>("defaultApplicationName", "RenderStar*");
-			Settings::GetInstance().Set<CommonVersionFormat>("defaultApplicationVersion", CommonVersionFormat::Create(0, 0, 1));
-			Settings::GetInstance().Set<Vector2i>("defaultWindowDimensions", { 750, 450 });
-			Settings::GetInstance().Set<WNDPROC>("defaultWindowProceadure", [](HWND handle, UINT message, WPARAM wParam, LPARAM  lParam) -> LRESULT
+			Settings::GetInstance()->Set<String>("defaultApplicationName", "RenderStar*");
+			Settings::GetInstance()->Set<CommonVersionFormat>("defaultApplicationVersion", CommonVersionFormat::Create(0, 0, 7));
+			Settings::GetInstance()->Set<Vector2i>("defaultWindowDimensions", { 750, 450 });
+			Settings::GetInstance()->Set<WNDPROC>("defaultWindowProceadure", [](HWND handle, UINT message, WPARAM wParam, LPARAM  lParam) -> LRESULT
 			{
 				switch (message)
 				{
@@ -31,11 +32,11 @@ namespace RenderStar
 					if (wParam != SIZE_MINIMIZED)
 					{
 						if (!Renderer::GetInstance()->IsInitialized())
-							break;
+							return 0;
+						
+						Renderer::GetInstance()->Resize({ LOWORD(lParam), HIWORD(lParam) });
 
-						//Render();
-
-						//Renderer::GetInstance()->Resize({ LOWORD(lParam), HIWORD(lParam) });
+						Render();
 					}
 
 					return 0;
@@ -64,6 +65,8 @@ namespace RenderStar
 			Logger_WriteConsole("RenderStar Engine Initialized.", LogLevel::INFORMATION);
 
 			Renderer::GetInstance()->Initialize();
+
+			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default"));
 		}
 
 		static void Update()

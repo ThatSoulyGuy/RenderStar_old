@@ -99,8 +99,14 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <EntryPointName>Main</EntryPointName>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>6.6</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -119,8 +125,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <EntryPointName>Main</EntryPointName>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>6.6</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -135,8 +147,14 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <EntryPointName>Main</EntryPointName>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>6.6</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -155,8 +173,14 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
     </Link>
+    <FxCompile>
+      <EntryPointName>Main</EntryPointName>
+    </FxCompile>
+    <FxCompile>
+      <ShaderModel>6.6</ShaderModel>
+    </FxCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="RenderStar\RenderStar.cpp" />
@@ -167,10 +191,44 @@
     <ClInclude Include="RenderStar\Include\RenderStar\Core\Settings.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Core\Window.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Renderer.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Shader.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\ShaderManager.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Vertex.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\CommonVersionFormat.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\DateTime.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\Formatter.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\Manager.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\Typedefs.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\RenderStar\Shader\DefaultPixel.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.6</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Assets\RenderStar\Shader\DefaultVertex.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">6.6</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Main</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.6</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

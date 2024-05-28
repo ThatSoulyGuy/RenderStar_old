@@ -47,5 +47,21 @@
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Renderer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Shader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\Manager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\ShaderManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Vertex.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Assets\RenderStar\Shader\DefaultVertex.hlsl" />
+    <FxCompile Include="Assets\RenderStar\Shader\DefaultPixel.hlsl" />
   </ItemGroup>
 </Project>

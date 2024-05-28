@@ -23,7 +23,7 @@ namespace RenderStar
 
                 windowClass.cbSize = sizeof(WNDCLASSEX);
                 windowClass.style = CS_HREDRAW | CS_VREDRAW;
-                windowClass.lpfnWndProc = Settings::GetInstance().Get<WNDPROC>("defaultWindowProceadure");
+                windowClass.lpfnWndProc = Settings::GetInstance()->Get<WNDPROC>("defaultWindowProceadure");
                 windowClass.hInstance = GetModuleHandle(nullptr);
                 windowClass.hCursor = LoadCursor(nullptr, IDC_ARROW);
                 windowClass.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);

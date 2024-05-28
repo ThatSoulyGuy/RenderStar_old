@@ -64,6 +64,76 @@ namespace RenderStar
                 CreateRenderTargetView();
             }
 
+            ComPtr<ID3D12Device2> GetDevice() const
+			{
+				return device;
+			}
+
+            ComPtr<ID3D12CommandQueue> GetCommandQueue() const
+            {
+                return commandQueue;
+			}
+
+            ComPtr<IDXGISwapChain4> GetSwapChain() const
+			{
+				return swapChain;
+			}
+
+            ComPtr<ID3D12DescriptorHeap> GetRenderTargetViewHeap() const
+            {
+                return renderTargetViewHeap;
+            }
+
+            ComPtr<ID3D12Resource> GetRenderTarget() const
+			{
+				return renderTargets[frameIndex];
+			}
+
+            ComPtr<ID3D12Resource> GetRenderTarget(UINT index) const
+			{
+				return renderTargets[index];
+			}
+
+            ComPtr<ID3D12CommandAllocator> GetCommandAllocator() const
+            {
+                return commandAllocators[frameIndex];
+            }
+
+            ComPtr<ID3D12CommandAllocator> GetCommandAllocator(UINT index) const
+            {
+				return commandAllocators[index];
+			}
+
+            ComPtr<ID3D12GraphicsCommandList> GetCommandList() const
+            {
+                return commandLists[frameIndex];
+            }
+
+            ComPtr<ID3D12GraphicsCommandList> GetCommandList(UINT index) const
+            {
+                return commandLists[index];
+            }
+
+            ComPtr<ID3D12Fence> GetFence() const
+			{
+				return fence;
+			}
+
+            HANDLE GetFenceEvent() const
+			{
+				return fenceEvent;
+			}
+
+            UINT GetRenderTargetHeapDescriptorSize() const
+            {
+                return renderTargetHeapDescriptorSize;
+            }
+
+            UINT GetFrameIndex() const
+			{
+				return frameIndex;
+			}
+
             void CleanUp()
             {
                 WaitForPreviousFrame();

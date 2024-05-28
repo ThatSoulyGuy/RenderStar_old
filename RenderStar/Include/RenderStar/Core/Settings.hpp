@@ -40,10 +40,9 @@ namespace RenderStar
 				return T();
 			}
 
-			static void SetInstance(Settings& instance)
+			static Shared<Settings> GetInstance()
 			{
-				Settings::instance = instance;
-			}
+				static Shared<Settings> instance = std::make_shared<Settings>();
 
 				return instance;
 			}

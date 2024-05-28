@@ -3,11 +3,11 @@
 
 int main()
 {
-	RenderStar::Core::Settings::GetInstance().Set<String>("defaultDomain", "RenderStar");
+	RenderStar::Core::Settings::GetInstance()->Set<String>("defaultDomain", "RenderStar");
 	
 	RenderStar::RenderStarEngine::PreInitialize();
 
-	RenderStar::Core::Window::GetInstance()->Create(RenderStar::Core::Settings::GetInstance().Get<String>("defaultApplicationName") + " " + RenderStar::Core::Settings::GetInstance().Get<RenderStar::Util::CommonVersionFormat>("defaultApplicationVersion").GetVersionString(), RenderStar::Core::Settings::GetInstance().Get<Vector2i>("defaultWindowDimensions"));
+	RenderStar::Core::Window::GetInstance()->Create(RenderStar::Core::Settings::GetInstance()->Get<String>("defaultApplicationName") + " " + RenderStar::Core::Settings::GetInstance()->Get<RenderStar::Util::CommonVersionFormat>("defaultApplicationVersion").GetVersionString(), RenderStar::Core::Settings::GetInstance()->Get<Vector2i>("defaultWindowDimensions"));
 
 	RenderStar::Core::Window::GetInstance()->Show();
 

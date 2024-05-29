@@ -11,6 +11,25 @@ namespace RenderStar
 {
 	namespace Util
 	{
+        enum class RootSignatureParameterType
+		{
+			CONSTANT_BUFFER_VIEW,
+			SHADER_RESOURCE_VIEW,
+            SAMPLER
+		};
+
+        struct RootSignatureParameter
+		{
+			RootSignatureParameterType type;
+			
+            UINT slot;
+
+            static RootSignatureParameter Create(RootSignatureParameterType type, UINT slot)
+            {
+                return { type, slot };
+            }
+		};
+
         class RootSignature
         {
 
@@ -18,15 +37,41 @@ namespace RenderStar
 
             ComPtr<ID3D12RootSignature> Generate()
             {
-                for (size_t d = 0; d < descriptorRanges.size(); ++d)
-                    rootParameters[d].InitAsDescriptorTable(1, &descriptorRanges[d]);
+                for (const auto& parameter : rootParameters)
+                {
+                    CD3DX12_DESCRIPTOR_RANGE1 descriptorRange;
+
+                    switch (parameter.type)
+                    {
+
+                    case RootSignatureParameterType::CONSTANT_BUFFER_VIEW:
+                        descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, 1, parameter.slot);
+                        break;
+
+                    case RootSignatureParameterType::SHADER_RESOURCE_VIEW:
+                        descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, parameter.slot);
+                        break;
+
+                    case RootSignatureParameterType::SAMPLER:
+                        descriptorRange.Init(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, 1, parameter.slot);
+                        break;
+                    }
+
+                    descriptorRanges.push_back(descriptorRange);
+
+                    rootParametersDescriptors.emplace_back();
+                    rootParametersDescriptors.back().InitAsDescriptorTable(1, &descriptorRanges.back());
+                }
+
+                for (int r = 0; r < rootParameters.size(); ++r)
+                    rootParametersDescriptors[r].InitAsDescriptorTable(1, &descriptorRanges[r]);
 
                 CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC versionedRootSignatureDescription;
 
                 if (staticSamplers.empty())
-                    versionedRootSignatureDescription.Init_1_1(static_cast<UINT>(rootParameters.size()), rootParameters.data(), 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                    versionedRootSignatureDescription.Init_1_1(static_cast<UINT>(rootParametersDescriptors.size()), rootParametersDescriptors.data(), 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
                 else
-                    versionedRootSignatureDescription.Init_1_1(static_cast<UINT>(rootParameters.size()), rootParameters.data(), static_cast<UINT>(staticSamplers.size()), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+                    versionedRootSignatureDescription.Init_1_1(static_cast<UINT>(rootParametersDescriptors.size()), rootParametersDescriptors.data(), static_cast<UINT>(staticSamplers.size()), staticSamplers.data(), D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
                 ComPtr<ID3DBlob> serializedRootSignature;
                 ComPtr<ID3DBlob> errorBlob;
@@ -37,7 +82,7 @@ namespace RenderStar
                 {
                     if (errorBlob)
                     {
-                        std::string errorMessage = static_cast<char*>(errorBlob->GetBufferPointer());
+                        String errorMessage = static_cast<char*>(errorBlob->GetBufferPointer());
                         throw std::runtime_error("Failed to serialize root signature: " + errorMessage);
                     }
 
@@ -53,54 +98,26 @@ namespace RenderStar
                 return rootSignature;
             }
 
-            static Shared<RootSignature> Create(UINT constantBufferViews, UINT shaderResourceViews, UINT samplers)
+            static Shared<RootSignature> Create(const Vector<RootSignatureParameter>& parameters, const Vector<CD3DX12_STATIC_SAMPLER_DESC>& samplers = {})
             {
                 Shared<RootSignature> out = std::make_shared<RootSignature>();
 
-                out->Initialize(constantBufferViews, shaderResourceViews, samplers);
+                out->Initialize(parameters, samplers);
 
                 return out;
             }
 
         private:
-            void Initialize(UINT constantBufferViews, UINT shaderResourceViews, UINT samplers)
+
+            void Initialize(const Vector<RootSignatureParameter>& parameters, const Vector<CD3DX12_STATIC_SAMPLER_DESC>& samplers)
             {
-                descriptorRanges.clear();
-                rootParameters.clear();
-
-                if (constantBufferViews > 0)
-                {
-                    CD3DX12_DESCRIPTOR_RANGE1 cbvRange(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, constantBufferViews, 0);
-                    descriptorRanges.push_back(cbvRange);
-
-                    CD3DX12_ROOT_PARAMETER1 cbvRootParam;
-                    cbvRootParam.InitAsDescriptorTable(1, &descriptorRanges.back());
-                    rootParameters.push_back(cbvRootParam);
-                }
-
-                if (shaderResourceViews > 0)
-                {
-                    CD3DX12_DESCRIPTOR_RANGE1 srvRange(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, shaderResourceViews, 0);
-                    descriptorRanges.push_back(srvRange);
-
-                    CD3DX12_ROOT_PARAMETER1 srvRootParam;
-                    srvRootParam.InitAsDescriptorTable(1, &descriptorRanges.back());
-                    rootParameters.push_back(srvRootParam);
-                }
-
-                if (samplers > 0)
-                {
-                    CD3DX12_DESCRIPTOR_RANGE1 samplerRange(D3D12_DESCRIPTOR_RANGE_TYPE_SAMPLER, samplers, 0);
-                    descriptorRanges.push_back(samplerRange);
-
-                    CD3DX12_ROOT_PARAMETER1 samplerRootParam;
-                    samplerRootParam.InitAsDescriptorTable(1, &descriptorRanges.back());
-                    rootParameters.push_back(samplerRootParam);
-                }
+                rootParameters = parameters;
+                staticSamplers = samplers;
             }
 
+            Vector<RootSignatureParameter> rootParameters;
             Vector<CD3DX12_DESCRIPTOR_RANGE1> descriptorRanges;
-            Vector<CD3DX12_ROOT_PARAMETER1> rootParameters;
+            Vector<CD3DX12_ROOT_PARAMETER1> rootParametersDescriptors;
             Vector<CD3DX12_STATIC_SAMPLER_DESC> staticSamplers;
         };
 	}

@@ -72,7 +72,7 @@ namespace RenderStar
 
 			Renderer::GetInstance()->AddRenderFunction([]{GameObjectManager::GetInstance()->Render(); });
 
-			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default", RootSignature::Create(0, 1, 1)));
+			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default", RootSignature::Create({ RootSignatureParameter::Create(RootSignatureParameterType::SHADER_RESOURCE_VIEW, 0), RootSignatureParameter::Create(RootSignatureParameterType::SAMPLER, 0) })));
 			TextureManager::GetInstance()->Register(Texture::Create("test", "Texture/Test.dds"));
 
 			Shared<GameObject> square = Mesh::CreateGameObject("square", "default", "test",

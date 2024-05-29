@@ -1,6 +1,6 @@
 # What is this?
 #
-This is a game engine. It runs on DirectX 12, using the common Win32 APIs. 
+This is a game engine. It runs on DirectX 12, using the common Win32 APIs. It uses Dxc to compile shaders. All shaders are compiled to Shader Model 6.6
 #
 # Why should I use this?
 You should not use this game engine YET. It is incomplete for now, as I have yet to implement a stable renderer.

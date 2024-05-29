@@ -19,7 +19,6 @@ namespace RenderStar
 	{
         class Shader : public Component
         {
-
         public:
 
             void Bind()
@@ -258,13 +257,6 @@ namespace RenderStar
             String vertexPath, pixelPath;
             String computePath, geometryPath;
             String hullPath, domainPath;
-
-            ComPtr<ID3D12PipelineState> vertexShader;
-            ComPtr<ID3D12PipelineState> pixelShader;
-            ComPtr<ID3D12PipelineState> computeShader;
-            ComPtr<ID3D12PipelineState> geometryShader;
-            ComPtr<ID3D12PipelineState> hullShader;
-            ComPtr<ID3D12PipelineState> domainShader;
 
             ComPtr<ID3D12PipelineState> pipelineState;
             ComPtr<ID3D12RootSignature> rootSignature;

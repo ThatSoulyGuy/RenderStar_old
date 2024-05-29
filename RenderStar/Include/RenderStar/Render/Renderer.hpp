@@ -54,8 +54,6 @@ namespace RenderStar
                 CD3DX12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle(renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(), currentFrameIndex, renderTargetHeapDescriptorSize);
                 D3D12_CPU_DESCRIPTOR_HANDLE depthStencilViewHandle = depthStencilHeap->GetCPUDescriptorHandleForHeapStart();
 
-                CreateViewportAndScissorRect();
-
                 float clearColor[] = { 0.0f, 0.45f, 0.75f, 1.0f };
 
                 commandLists[frameIndex]->ClearRenderTargetView(renderTargetViewHandle, clearColor, 0, nullptr);
@@ -425,27 +423,6 @@ namespace RenderStar
 
                 if (fenceEvent == nullptr)
                     Logger_ThrowError("FAILED", "Failed to create fence event.", true);
-            }
-
-            void WaitForPreviousFrame()
-            {
-                const UINT64 currentFenceValue = fenceValue;
-                HRESULT result = commandQueue->Signal(fence.Get(), currentFenceValue);
-                if (FAILED(result))
-                    Logger_ThrowError("FAILED", "Failed to signal fence.", true);
-
-                fenceValue++;
-
-                if (fence->GetCompletedValue() < currentFenceValue)
-                {
-                    result = fence->SetEventOnCompletion(currentFenceValue, fenceEvent);
-                    if (FAILED(result))
-                        Logger_ThrowError("FAILED", "Failed to set event on completion.", true);
-
-                    WaitForSingleObject(fenceEvent, INFINITE);
-                }
-
-                frameIndex = swapChain->GetCurrentBackBufferIndex();
             }
 
             static const UINT frameCount = 2;

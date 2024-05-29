@@ -6,6 +6,7 @@
 #include "RenderStar/Render/Mesh.hpp"
 #include "RenderStar/Render/Renderer.hpp"
 #include "RenderStar/Render/ShaderManager.hpp"
+#include "RenderStar/Render/TextureManager.hpp"
 #include "RenderStar/Util/CommonVersionFormat.hpp"
 
 using namespace RenderStar::Core;
@@ -63,7 +64,7 @@ namespace RenderStar
 			Logger_WriteConsole("RenderStar Engine Pre-Initialized.", LogLevel::INFORMATION);
 		}
 
-		static void Initialize()
+		static void Initialize()                
 		{
 			Logger_WriteConsole("RenderStar Engine Initialized.", LogLevel::INFORMATION);
 
@@ -71,13 +72,14 @@ namespace RenderStar
 
 			Renderer::GetInstance()->AddRenderFunction([]{GameObjectManager::GetInstance()->Render(); });
 
-			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default"));
+			ShaderManager::GetInstance()->Register(Shader::Create("default", "Shader/Default", RootSignature::Create(0, 1, 1)));
+			TextureManager::GetInstance()->Register(Texture::Create("test", "Texture/Test.dds"));
 
-			Shared<GameObject> square = Mesh::CreateGameObject("square", "default", 
+			Shared<GameObject> square = Mesh::CreateGameObject("square", "default", "test",
 			{
-				{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 0.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
-				{ {  0.5f, -0.5f, 0.0f }, { 0.0f, 1.0f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
-				{ {  0.5f,  0.5f, 0.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } },
+				{ { -0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 1.0f } },
+				{ {  0.5f, -0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 1.0f } },
+				{ {  0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 1.0f, 0.0f } },
 				{ { -0.5f,  0.5f, 0.0f }, { 1.0f, 1.0f, 1.0f }, { 0.0f, 0.0f, 1.0f }, { 0.0f, 0.0f } }
 			}, { 2, 1, 0, 3, 2, 0 });
 
@@ -99,7 +101,8 @@ namespace RenderStar
 			Logger_WriteConsole("RenderStar Engine Cleaned Up.", LogLevel::INFORMATION);
 
 			GameObjectManager::GetInstance()->CleanUp();
-
+			
+			
 			Renderer::GetInstance()->CleanUp();
 		}
 	};

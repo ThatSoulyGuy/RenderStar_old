@@ -74,9 +74,27 @@
     <ClInclude Include="RenderStar\Include\RenderStar\Math\Transform.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\Loader.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Texture.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\TextureManager.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\RootSignature.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Assets\RenderStar\Shader\DefaultVertex.hlsl" />
     <FxCompile Include="Assets\RenderStar\Shader\DefaultPixel.hlsl" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\RenderStar\Texture\Test.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="Assets\RenderStar\Texture\Test.dds" />
   </ItemGroup>
 </Project>

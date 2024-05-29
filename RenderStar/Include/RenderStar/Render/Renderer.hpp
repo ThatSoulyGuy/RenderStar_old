@@ -31,27 +31,50 @@ namespace RenderStar
                 isInitialized = true;
             }
 
-            void Render()
+            void OpenCommandList()
             {
-                CD3DX12_RESOURCE_BARRIER barrier;
+                OpenCommandList(frameIndex);
+            }
 
-                UINT currentFrameIndex = frameIndex;
-                HRESULT result = S_OK;
-
-                result = commandAllocators[currentFrameIndex]->Reset();
-
+            void OpenCommandList(UINT frameIndex)
+            {
+                HRESULT result = commandAllocators[frameIndex]->Reset();
                 if (FAILED(result))
                     Logger_ThrowError("FAILED", "Failed to reset command allocator.", true);
 
-                result = commandLists[currentFrameIndex]->Reset(commandAllocators[currentFrameIndex].Get(), nullptr);
-
+                result = commandLists[frameIndex]->Reset(commandAllocators[frameIndex].Get(), nullptr);
                 if (FAILED(result))
                     Logger_ThrowError("FAILED", "Failed to reset command list.", true);
 
-                barrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[currentFrameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
-                commandLists[currentFrameIndex]->ResourceBarrier(1, &barrier);
+                CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(), D3D12_RESOURCE_STATE_PRESENT, D3D12_RESOURCE_STATE_RENDER_TARGET);
+                commandLists[frameIndex]->ResourceBarrier(1, &barrier);
 
-                CD3DX12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle(renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(), currentFrameIndex, renderTargetHeapDescriptorSize);
+                CreateViewportAndScissorRect();
+            }
+
+            void CloseCommandList()
+			{
+				CloseCommandList(frameIndex);
+			}
+
+            void CloseCommandList(UINT frameIndex)
+            {
+                CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[frameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
+                commandLists[frameIndex]->ResourceBarrier(1, &barrier);
+
+                HRESULT result = commandLists[frameIndex]->Close();
+                if (FAILED(result))
+                    Logger_ThrowError("FAILED", "Failed to close command list.", true);
+
+                ID3D12CommandList* ppCommandLists[] = { commandLists[frameIndex].Get() };
+                commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+            }
+
+            void Render()
+            {
+                OpenCommandList();
+
+                CD3DX12_CPU_DESCRIPTOR_HANDLE renderTargetViewHandle(renderTargetViewHeap->GetCPUDescriptorHandleForHeapStart(), frameIndex, renderTargetHeapDescriptorSize);
                 D3D12_CPU_DESCRIPTOR_HANDLE depthStencilViewHandle = depthStencilHeap->GetCPUDescriptorHandleForHeapStart();
 
                 float clearColor[] = { 0.0f, 0.45f, 0.75f, 1.0f };
@@ -64,19 +87,9 @@ namespace RenderStar
                 for (auto& renderFunction : renderFunctions)
                     renderFunction();
 
-                barrier = CD3DX12_RESOURCE_BARRIER::Transition(renderTargets[currentFrameIndex].Get(), D3D12_RESOURCE_STATE_RENDER_TARGET, D3D12_RESOURCE_STATE_PRESENT);
-                commandLists[currentFrameIndex]->ResourceBarrier(1, &barrier);
+                CloseCommandList();
 
-                result = commandLists[currentFrameIndex]->Close();
-
-                if (FAILED(result))
-                    Logger_ThrowError("FAILED", "Failed to close command list.", true);
-
-                ID3D12CommandList* ppCommandLists[] = { commandLists[frameIndex].Get() };
-                commandQueue->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-
-                result = swapChain->Present(1, 0);
-
+                HRESULT result = swapChain->Present(1, 0);
                 if (FAILED(result))
                     Logger_ThrowError("FAILED", "Failed to present swap chain.", true);
 
@@ -195,6 +208,27 @@ namespace RenderStar
 				return frameIndex;
 			}
 
+            void WaitForPreviousFrame()
+            {
+                const UINT64 currentFenceValue = fenceValue;
+                HRESULT result = commandQueue->Signal(fence.Get(), currentFenceValue);
+                if (FAILED(result))
+                    Logger_ThrowError("FAILED", "Failed to signal fence.", true);
+
+                fenceValue++;
+
+                if (fence->GetCompletedValue() < currentFenceValue)
+                {
+                    result = fence->SetEventOnCompletion(currentFenceValue, fenceEvent);
+                    if (FAILED(result))
+                        Logger_ThrowError("FAILED", "Failed to set event on completion.", true);
+
+                    WaitForSingleObject(fenceEvent, INFINITE);
+                }
+
+                frameIndex = swapChain->GetCurrentBackBufferIndex();
+            }
+
             void CleanUp()
             {
                 WaitForPreviousFrame();
@@ -213,9 +247,16 @@ namespace RenderStar
             void EnableDebugLayer()
             {
         #ifdef _DEBUG
+
                 ComPtr<ID3D12Debug> debugController;
+
                 if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
                     debugController->EnableDebugLayer();
+
+                ComPtr<ID3D12Debug1> debugController1;
+
+                if (SUCCEEDED(debugController->QueryInterface(IID_PPV_ARGS(&debugController1))))
+                    debugController1->SetEnableGPUBasedValidation(TRUE);
         #endif
             }
 
@@ -357,7 +398,7 @@ namespace RenderStar
                 if (FAILED(result))
                     Logger_ThrowError("FAILED", "Failed to create depth stencil heap.", true);
 
-                D3D12_RESOURCE_DESC depthStencilDescription = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, Window::GetInstance()->GetClientDimensions().x, Window::GetInstance()->GetClientDimensions().y, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL);
+                D3D12_RESOURCE_DESC depthStencilDescription = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_D32_FLOAT, Window::GetInstance()->GetClientDimensions().x, Window::GetInstance()->GetClientDimensions().y, 1, 0, 1, 0, D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL | D3D12_RESOURCE_FLAG_DENY_SHADER_RESOURCE);
 
                 D3D12_CLEAR_VALUE clearValue = {};
 

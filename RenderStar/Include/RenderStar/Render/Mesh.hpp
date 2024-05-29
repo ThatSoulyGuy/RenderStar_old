@@ -2,6 +2,7 @@
 
 #include "RenderStar/ECS/GameObjectManager.hpp"
 #include "RenderStar/Render/ShaderManager.hpp"
+#include "RenderStar/Render/TextureManager.hpp"
 #include "RenderStar/Render/Vertex.hpp"
 #include "RenderStar/Util/Typedefs.hpp"
 
@@ -20,6 +21,22 @@ namespace RenderStar
             void Initialize() override
             {
                 shader = gameObject->GetComponent<Shader>();
+                texture = gameObject->GetComponent<Texture>();
+
+                if (!shader || !texture)
+                {
+                    Logger_ThrowError("Initialization Error", "Shader or Texture component missing from GameObject", true);
+                    return;
+                }
+
+                if (!texture->GetRaw())
+                {
+                    Logger_ThrowError("Initialization Error", "Texture resource is invalid", true);
+                    return;
+                }
+
+                shader->CreateTexture(texture->GetRaw(), 0);
+                shader->CreateSampler(0);
             }
 
             void Generate()
@@ -33,6 +50,7 @@ namespace RenderStar
                 if (!shader)
                     return;
 
+                texture->Bind();
                 shader->Bind();
 
                 UINT stride = sizeof(Vertex);
@@ -74,11 +92,12 @@ namespace RenderStar
                 return out;
             }
 
-            static Shared<GameObject> CreateGameObject(const String& name, const String& shader, const Vector<Vertex>& vertices, const Vector<uint>& indices)
+            static Shared<GameObject> CreateGameObject(const String& name, const String& shader, const String& texture, const Vector<Vertex>& vertices, const Vector<uint>& indices)
             {
                 Shared<GameObject> out = GameObjectManager::GetInstance()->Create(name);
 
                 out->AddComponent(ShaderManager::GetInstance()->Get(shader));
+                out->AddComponent(TextureManager::GetInstance()->Get(texture));
                 out->AddComponent(Mesh::Create(name, vertices, indices));
 
                 return out;
@@ -140,6 +159,7 @@ namespace RenderStar
             String name;
 
             Shared<Shader> shader;
+            Shared<Texture> texture;
 
             Vector<Vertex> vertices;
             Vector<uint> indices;

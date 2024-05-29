@@ -5,7 +5,7 @@ struct VertexInputType
     float3 position : POSITION;
     float3 color : COLOR;
     float3 normal : NORMAL;
-    float2 textureCoordinates : TEXTURECOORDINATES;
+    float2 textureCoordinates : TEXCOORD0;
 };
 
 struct PixelInputType

@@ -72,19 +72,19 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <IncludePath>RenderStar\Include</IncludePath>
-    <ExternalIncludePath>Library\Include;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>Library\Include;Library\Include\DirectXTex;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IncludePath>RenderStar\Include</IncludePath>
-    <ExternalIncludePath>Library\Include;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>Library\Include;Library\Include\DirectXTex;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <IncludePath>RenderStar\Include</IncludePath>
-    <ExternalIncludePath>Library\Include;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>Library\Include;Library\Include\DirectXTex;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <IncludePath>RenderStar\Include</IncludePath>
-    <ExternalIncludePath>Library\Include;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
+    <ExternalIncludePath>Library\Include;Library\Include\DirectXTex;Library\Include\directx;Library\Include\dxguids;$(VC_IncludePath);$(WindowsSDK_IncludePath);$(ExternalIncludePath)</ExternalIncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -97,9 +97,9 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib;DirectXTexd.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
       <EntryPointName>Main</EntryPointName>
@@ -123,9 +123,9 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib;DirectXTexd.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
       <EntryPointName>Main</EntryPointName>
@@ -145,9 +145,9 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib;DirectXTexd.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
       <EntryPointName>Main</EntryPointName>
@@ -171,9 +171,9 @@
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <AdditionalLibraryDirectories>.\Library\lib</AdditionalLibraryDirectories>
-      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib</AdditionalDependencies>
+      <AdditionalDependencies>$(CoreLibraryDependencies);%(AdditionalDependencies);d3d12.lib;d3d11.lib;d3d9.lib;d3dcompiler.lib;D3DCSX.lib;D3DCSXd.lib;dxgi.lib;DirectX-Guidsd.lib;dxcompiler_1.lib;DirectX-Headersd.lib;DirectXTexd.lib</AdditionalDependencies>
     </Link>
     <FxCompile>
       <EntryPointName>Main</EntryPointName>
@@ -198,11 +198,15 @@
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Renderer.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Shader.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\ShaderManager.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\Texture.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Render\TextureManager.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Render\Vertex.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\CommonVersionFormat.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\DateTime.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\Formatter.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\Loader.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\Manager.hpp" />
+    <ClInclude Include="RenderStar\Include\RenderStar\Util\RootSignature.hpp" />
     <ClInclude Include="RenderStar\Include\RenderStar\Util\Typedefs.hpp" />
   </ItemGroup>
   <ItemGroup>
@@ -234,6 +238,10 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Main</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">6.6</ShaderModel>
     </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="Assets\RenderStar\Texture\Test.dds" />
+    <Image Include="Assets\RenderStar\Texture\Test.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
